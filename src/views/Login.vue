@@ -17,9 +17,28 @@
               
 
             </v-text-field>
-             <v-text-field class="deep-purple--text text--accent-4" color="deep-purple" label="Senha" v-model="user.password">
+             <v-text-field class="deep-purple--text text--accent-4" color="deep-purple" label="Senha" v-model="user.password" append-icon="mdi-eye"
+             :type="show ? 'text ': 'password' " @click:append="show = !show"   >
 
             </v-text-field>
+            <v-btn
+              
+              color="deep-purple"
+              class="mr-4"
+              @click="login"
+              
+            >
+              Entrar
+            </v-btn>
+                        <v-btn
+              
+              color="error"
+              class="mr-4"
+              @click="reset"
+              
+            >
+              Resetar
+            </v-btn>
           </v-form>
         </v-col>
       </v-row>
@@ -27,6 +46,7 @@
 
 
     </v-container>
+    <v-snackbar color="red" v-model="errorLogin"  danger multline timout="2000"> Usuário ou senha inválidos</v-snackbar>
   </v-container>
 </template>
 
@@ -36,8 +56,21 @@ export default {
     return {
       user: {},
       show: false,
+      errorLogin: false
     }
   },
+  methods: {
+    reset() {
+      this.user = {};
+    },
+    login() {
+      if(this.user.email === 'kauane' && this.user.password === 'kauane') {
+        this.$router.push({name: "Home"});
+      } else {
+        this.errorLogin = true;
+      }
+    }
+  }
 
 
 }
