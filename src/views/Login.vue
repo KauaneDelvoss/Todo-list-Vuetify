@@ -30,15 +30,7 @@
             >
               Entrar
             </v-btn>
-                        <v-btn
-              
-              color="error"
-              class="mr-4"
-              @click="reset"
-              
-            >
-              Resetar
-            </v-btn>
+                        
           </v-form>
         </v-col>
       </v-row>
@@ -113,7 +105,7 @@ export default {
         this.user.password
       );
       this.login();
-    }  
+    },  
   }
 
 
