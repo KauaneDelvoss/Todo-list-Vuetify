@@ -19,17 +19,16 @@
             v-model="group"
             active-class="deep-purple--text text--accent-4"
           >
-            <v-list-item>
-              <v-list-item-title>Hoje</v-list-item-title>
+            <v-list-item 
+            v-for="nave in nav"
+            :key="nave.title"
+            link :to="nave.to"
+            class="mx-4"
+            icon>
+              <v-list-item-title>{{nave.title}}</v-list-item-title>
             </v-list-item>
   
-            <v-list-item>
-              <v-list-item-title>Semana</v-list-item-title>
-            </v-list-item>
-  
-            <v-list-item>
-              <v-list-item-title>Mês</v-list-item-title>
-            </v-list-item>
+           
   
             
           </v-list-item-group>
@@ -90,8 +89,15 @@
       ],
       items: [
         {title: "Home", icon: "mdi-home", to: "/"},
+        {title: "Calendário", icon: "mdi-calendar", to: "/calendario"},
         {title: "Perfil", icon: "mdi-account-circle", to: "/perfil"},
         {title: "Sair", icon: "mdi-exit-to-app", to: "/login"},
+      ],
+      nav: [
+        {title: "Home", to: "/"},
+        {title: "Calendario", to: "/calendario"},
+        {title: "Meu perfil", to: "/perfil"},
+        {title: "Sair", to: "/login"},
       ],
       padless: false,
       variant: 'fixed',
