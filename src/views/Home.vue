@@ -7,7 +7,13 @@
           </v-text-field>
           <v-list>
               <v-list-item-group>
-                  <v-list-item v-for="tarefa in tarefas" :key="tarefa.id"> {{tarefa.titulo}} </v-list-item>
+                <v-list-item v-for="tarefa in tarefas" :key="tarefa.id"  > {{tarefa.titulo}}
+                    <v-btn absolute right depressed icon @click="deletar(tarefa.id)">
+                        <v-icon dark>
+                            mdi-delete
+                         </v-icon>
+                    </v-btn>
+                </v-list-item>
 
               </v-list-item-group>
           </v-list>
@@ -55,6 +61,12 @@ export default {
             this.novaTarefa = "";
             this.lerTarefas();
         },
+        async deletar(id) {
+            await fb.tasksCollection.doc(id).delete();
+            this.lerTarefas();
+        },
+
+        
     }
 }
 </script>
