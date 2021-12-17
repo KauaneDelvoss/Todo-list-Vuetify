@@ -7,7 +7,7 @@
           </v-text-field>
           <v-list>
               <v-list-item-group>
-                  <v-list-item v-for="tarefa in tarefas" :key="tarefa.titulo"> {{tarefa.titulo}} </v-list-item>
+                  <v-list-item v-for="tarefa in tarefas" :key="tarefa.id"> {{tarefa.titulo}} </v-list-item>
 
               </v-list-item-group>
           </v-list>
@@ -17,24 +17,44 @@
 </template>
 
 <script>
+import * as fb from '@/plugins/firebase'
 export default {
     data() {
         return {
-            novatarefa: "",
+            uid: "",
+            novaTarefa: "",
             tarefas: [
-                {titulo: "Tarefa 1"},
-                {titulo: "Tarefa 2"},
-                {titulo: "Tarefa 3"}
+                
             ]
 
         }
     },
+    mounted() {
+        this.uid = fb.auth.currentUser.uid;
+        this.lerTarefas()
+    },
     methods: {
-        adicionar(e) {
-            e.preventDefault();
-            this.tarefas.push ({titulo: this.novaTarefa})
-            this.novaTarefa = "";
+        async lerTarefas() {
+            this.tarefas = []
+            const logTasks = await fb.tasksCollection.where('proprietario', "==", this.uid)
+            .get();
+        for (const doc of logTasks.docs) {
+            this.tarefas.push({
+                id: doc.id,
+                titulo: doc.data().titulo,
+            })
         }
+
+        },
+        async adicionar() {
+            await fb.tasksCollection.add({
+                titulo: this.novaTarefa,
+                dataGravacao: new Date().toISOString().slice(0, 10),
+                proprietario: this.uid,
+            });
+            this.novaTarefa = "";
+            this.lerTarefas();
+        },
     }
 }
 </script>
