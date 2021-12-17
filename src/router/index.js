@@ -20,6 +20,11 @@ const routes = [
         name: 'Perfil',
         component: () => import(/* webpackChunkName: "perfil" */ '../views/Perfil.vue')
       },
+      {
+        path: '/calendario',
+        name: 'Calendario',
+        component: () => import(/* webpackChunkName: "calendario" */ '../views/Calendario.vue')
+      },
       
     ]
   },
