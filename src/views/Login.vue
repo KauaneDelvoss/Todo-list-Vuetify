@@ -47,29 +47,73 @@
 
     </v-container>
     <v-snackbar color="red" v-model="errorLogin"  danger multline timout="2000"> Usuário ou senha inválidos</v-snackbar>
+    <v-dialog v-model="novaConta" persistent max-width="300">
+      <v-card>
+        <v-card-title>Conta não encontrada.</v-card-title>
+        <v-card-text>
+          A conta não foi localizada. Deseja criar um nova conta com os dados
+          informados?
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" text @click="criarNovaConta">Sim</v-btn>
+          <v-btn color="red darken-1" text @click="novaConta = false"
+            >Não</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
 <script>
+import * as fb from '@/plugins/firebase'
 export default {
   data(){
     return {
       user: {},
       show: false,
-      errorLogin: false
+      errorLogin: false,
+      novaConta: false
     }
   },
   methods: {
     reset() {
       this.user = {};
     },
-    login() {
-      if(this.user.email === 'kauane' && this.user.password === 'kauane') {
-        this.$router.push({name: "Home"});
-      } else {
-        this.errorLogin = true;
+  async login() {
+      try {
+        await fb.auth.signInWithEmailAndPassword(
+          this.user.email,
+          this.user.password
+        );
+        this.$router.push({ name: "Home" });
+      } catch (error) {
+        const errorCode = error.code;
+        switch (errorCode) {
+          case "auth/wrong-password":
+            this.errorLogin = true;
+            break;
+          case "auth/invalid-email":
+            this.errorLogin = true;
+            break;
+          case "auth/user-not-found":
+            this.novaConta = true;
+            break;
+          default:
+            this.errorLogin = true;
+            break;
+        }
       }
-    }
+    },
+    async criarNovaConta() {
+      this.novaConta = false;
+      await fb.auth.createUserWithEmailAndPassword(
+        this.user.email,
+        this.user.password
+      );
+      this.login();
+    }  
   }
 
 
